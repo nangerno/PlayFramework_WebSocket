@@ -1,0 +1,8 @@
+# WebSocket endpoint
+
+
+GET     /              controllers.WebSocketController.index
+GET     /ws            controllers.WebSocketController.socket
+
+# Assets route
+GET     /assets/*file  controllers.Assets.versioned(path="/public", file: Asset)

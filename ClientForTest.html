@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client</title>
+  </head>
+  <body>
+    <h1>WebSocket Client Test</h1>
+    <div id="output"></div>
+
+    <script>
+      // Create a new WebSocket connection
+      const ws = new WebSocket("ws://localhost:9000/ws");
+
+      function displayMessage(message) {
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerHTML += `<p>${message}</p>`;
+      }
+
+      ws.onopen = function () {
+        displayMessage("WebSocket connection opened.");
+
+        // Send an authentication request
+        const authRequest = { secretKey: "1234567890" };
+        ws.send(JSON.stringify(authRequest));
+      };
+
+      // When a message is received from the server
+      ws.onmessage = function (event) {
+        const response = JSON.parse(event.data);
+        displayMessage("Message from server: " + JSON.stringify(response));
+
+        // after authenticated, send a request mail or name
+        if (response === "Authenticated") {
+          const itemRequest = { value: "eve@example.com" };
+          ws.send(JSON.stringify(itemRequest));
+        }
+      };
+      //close event
+      ws.onclose = function () {
+        displayMessage("WebSocket connection closed.");
+      };
+      ws.onerror = function (error) {
+        displayMessage("WebSocket error: " + error.message);
+      };
+    </script>
+  </body>
+</html>
